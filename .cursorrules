@@ -1,0 +1,224 @@
+# Vilidity AI
+Every time you choose to apply a rule(s), explicitly state the rule(s) in the output. You can abbreviate the rule description to a single word or phrase.
+
+## Project Context
+Vilidity.ai is an innovative AI-powered platform designed to help developers and entrepreneurs validate their ideas effectively. By leveraging state-of-the-art AI models like OpenAI GPT, Gemini, Grok, and xAI, Vilidity.ai analyzes user-submitted ideas through text inputs or uploaded documents. It evaluates their viability across critical metrics, including virality, uniqueness, and problem-solving potential.
+
+The platform integrates data from Google, Twitter, and other web sources to provide actionable, data-driven insights. Features include AI-generated improvement suggestions, visualized metrics, and motivational feedback to refine ideas. Users can subscribe to a credit-based system, enabling them to validate multiple projects monthly, with scalable options for more extensive analyses.
+
+Vilidity.ai combines powerful technology with practical guidance, empowering users to confidently move from concept to implementation
+
+## Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples
+- Use functional and declarative programming patterns; avoid classes
+- Prefer iteration and modularization over code duplication
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError)
+- Structure repository files as follows:
+```
+.
+├── apps/
+│   ├── api/                     # Serverless API
+│   │   ├── app/                # API routes
+│   │   ├── node_modules/       
+│   │   └── configuration files (.env, next.config.ts, etc.)
+│   │
+│   ├── app/                    # Main application
+│   │   ├── app/               # Next.js App Router structure
+│   │   │   ├── api/          # API routes
+│   │   │   ├── (authenticated)/    # Protected routes
+│   │   │   │   ├── components/     # Authenticated components
+│   │   │   │   │   ├── ai/        # AI-specific components
+│   │   │   │   │   ├── dashboard/ # Dashboard components
+│   │   │   │   │   └── shared/    # Shared authenticated components
+│   │   │   │   └── ...           # Other authenticated routes
+│   │   │   ├── (unauthenticated)/ # Public routes
+│   │   │   ├── .well-known/       # Well-known URLs
+│   │   │   └── layout.tsx         # Root layout
+│   │   ├── __tests__/        # Test files
+│   │   └── configuration files
+│   │
+│   ├── docs/                  # Documentation site
+│   ├── email/                # Email templates
+│   ├── storybook/            # Component library
+│   ├── studio/              # Prisma Studio
+│   └── web/                 # Marketing site
+│       ├── app/            # Next.js App Router structure
+│       │   ├── blog/      # Blog pages
+│       │   │   └── [slug]/ # Dynamic blog post routes
+│       │   ├── pricing/   # Pricing page
+│       │   ├── about/     # About page
+│       │   ├── contact/   # Contact page
+│       │   ├── components/ # Marketing site components
+│       │   │   ├── landing/ # Landing page components
+│       │   │   │   ├── hero/
+│       │   │   │   ├── features/
+│       │   │   │   └── testimonials/
+│       │   │   ├── shared/ # Shared marketing components
+│       │   │   └── pricing/ # Pricing components
+│       │   ├── layout.tsx # Root layout
+│       │   └── page.tsx   # Landing page
+│       ├── public/        # Static assets
+│       └── configuration files (.env, next.config.ts, etc.)
+│
+├── packages/
+│   ├── ai/                # AI integration with OpenAI, including prompt management
+│   ├── analytics/         # Analytics integration (PostHog, Google Analytics)
+│   ├── auth/             # Authentication wrapper (default: Clerk)
+│   ├── cms/              # Content management system utilities
+│   ├── database/         # Database schema, migrations, and type-safe ORM (default: Prisma)
+│   ├── design-system/    # Shared UI components, styling, and theme management
+│   ├── email/            # Email functionality, templates, and provider integration
+│   ├── env/             # Type-safe environment variable handling
+│   ├── feature-flags/    # Feature flag system using PostHog
+│   ├── next-config/     # Shared Next.js configuration
+│   ├── observability/   # Logging, error tracking, and uptime monitoring
+│   ├── payments/        # Payment processing and billing (default: Stripe)
+│   ├── rate-limit/      # API rate limiting utilities
+│   ├── security/        # Security utilities and middleware
+│   ├── seo/             # SEO utilities including metadata, JSON-LD, and sitemaps
+│   ├── storage/         # File storage utilities (default: Vercel Blob)
+│   ├── tailwind-config/ # Shared Tailwind CSS configuration
+│   ├── testing/         # Testing utilities and shared test configuration
+│   ├── typescript-config/ # Shared TypeScript configuration
+│   └── webhooks/        # Webhook handling and processing
+│
+└── configuration files
+    ├── biome.json           # Biome configuration for formatting and linting
+    ├── pnpm-workspace.yaml  # PNPM workspace configuration
+    └── turbo.json          # Turborepo configuration for build and task management
+    
+```
+
+## Tech Stack
+
+# Core Technologies
+- Next.js (App Router) for the main application framework
+- TypeScript for type-safe development
+- Turborepo for monorepo management
+- pnpm as the default package manager
+
+# Database & ORM
+- Neon PostgreSQL (default database)
+- Prisma as the default ORM
+
+# Authentication & Security
+- Clerk for authentication (default)
+- Arcjet for application security
+- BetterStack for logging and monitoring
+
+# Frontend
+- React for UI components
+- Shadcn UI for component library
+- Tailwind CSS for styling
+- Radix UI (through Shadcn)
+
+# Analytics & Monitoring
+- PostHog for product analytics
+- Google Analytics for web analytics
+- Sentry for error tracking
+- BetterStack for uptime monitoring
+
+# Content & Documentation
+- Mintlify for documentation
+- Content Collections for blog/content management
+
+# Development Tools
+- Biome (through Ultracite) for formatting and linting
+- Storybook for component development
+- Vercel Bundle Analyzer for bundle optimization
+
+# Infrastructure & Deployment
+- Vercel as the primary deployment platform
+- Vercel Blob for file storage
+- Vercel Flags for feature flags
+
+# Email & Communications
+- Resend for transactional emails
+
+# Payments
+- Stripe for payment processing
+
+## Data Handling
+- Use Neon PostgreSQL for database
+- Use Clerk for authentication and session management
+- Implement proper error handling for file uploads
+- Use strong typing for API responses
+- Cache expensive operations where possible
+
+## Naming Conventions
+- Use lowercase with dashes for directories (e.g., components/idea-analysis)
+- Favor named exports for components
+- Prefix AI-related components with "Ai" (e.g., AiAnalysis, AiSuggestions)
+- Use descriptive names for analysis metrics (e.g., viralityScore, uniquenessRating)
+- Place all shared UI components in packages/design-system/ui
+
+## TypeScript Usage
+- Use TypeScript for all code; prefer interfaces over types
+- Avoid enums; use const objects with 'as const' assertion
+- Use functional components with TypeScript interfaces
+- Define strict types for message passing between different parts of the extension
+- Use absolute imports for all files @/...
+- Avoid try/catch blocks unless theres good reason to translate or handle error in that abstraction
+- Use explicit return types for all functions
+
+## Syntax and Formatting
+- Use "function" keyword for pure functions
+- Avoid unnecessary curly braces in conditionals
+- Use declarative JSX
+- Implement proper TypeScript discriminated unions for message types
+
+## Performance Optimization
+- Minimize 'use client' usage; favor React Server Components
+- Implement proper suspense boundaries for AI operations
+- Use dynamic loading for non-critical components
+- Optimize images and file uploads
+
+## UI and Styling
+- Use Shadcn UI components with consistent styling
+- Create all new UI components in packages/design-system/ui
+- Implement responsive design with Tailwind CSS
+- Maintain a consistent color scheme for scoring visualization
+
+## AI Integration Patterns
+- Implement retry logic for AI API calls
+- Use streaming responses for real-time analysis feedback
+- Cache AI results in Neon for cost optimization
+- Structure prompts in separate, versioned files
+
+## Error Handling
+- Implement proper error boundaries
+- Log errors appropriately for debugging
+- Provide user-friendly error messages
+- Handle network failures gracefully
+
+## Security
+- Implement Content Security Policy
+- Sanitize user inputs
+- Handle sensitive data properly
+- Implement proper CORS handling
+
+## Documentation
+- Maintain clear README with setup instructions
+- Document API interactions and data flows
+- Keep manifest.json well-documented
+- Dont include comments unless its for complex logic
+- Document permission requirements
+
+## Development Workflow
+- Use proper version control
+- Implement proper code review process
+- Test in multiple environments
+- Follow semantic versioning for releases
+- Maintain changelog
+
+## File Organization
+- Group AI-related components in components/ai/*
+- Keep analysis logic in separate utilities
+- Organize prompts in a dedicated directory
+- Maintain clear separation between client and server code
+- Place all shared UI components in packages/design-system/ui
+
+## Terminal Commands
+- when providing commands, provide the directory in which the command should be run based on the project structure
+
+Follow Next.js docs for Data Fetching, Rendering, and Routing. 

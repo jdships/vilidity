@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.9.0",
     "@prisma/client": "6.0.1",
     "@repo/analytics": "workspace:*",
     "@repo/auth": "workspace:*",
@@ -32,9 +33,12 @@
     "next-themes": "^0.4.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "require-in-the-middle": "^7.4.0"
+    "require-in-the-middle": "^7.4.0",
+    "svix": "^1.43.0"
   },
   "devDependencies": {
+    "@clerk/backend": "^1.21.4",
+    "@clerk/types": "^4.39.2",
     "@repo/testing": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@testing-library/dom": "^10.4.0",
@@ -43,6 +47,7 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
     "jsdom": "^25.0.1",
+    "ngrok": "5.0.0-beta.2",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

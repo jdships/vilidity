@@ -12,10 +12,19 @@ datasource db {
   relationMode = "prisma"
 }
 
-// This is a stub model.
-// Delete it and add your own Prisma models.
-model Page {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model User {
+  id            String    @id // Clerk user ID
+  email         String    @unique
+  firstName     String?
+  lastName      String?
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Optional fields from Clerk
+  username      String?   @unique
+  externalId    String?   @unique  // External ID if using OAuth
+  publicMetadata Json?    // Public metadata from Clerk
+  privateMetadata Json?   // Private metadata from Clerk
 }
+
