@@ -64,14 +64,8 @@ function ChatHistoryTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-semibold text-lg tracking-tight">Chat History</h2>
-          <p className="text-muted-foreground text-sm">
-            Your previous conversations with Vilidity AI
-          </p>
-        </div>
+    <div className="space-y-1">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
         <div className="w-[300px]">
           <Input
             placeholder="Search conversations..."

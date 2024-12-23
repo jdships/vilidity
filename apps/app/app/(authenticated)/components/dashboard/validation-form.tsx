@@ -1,5 +1,4 @@
 'use client';
-
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Card,
@@ -72,6 +71,7 @@ export function ValidationForm() {
         </div>
       </CardContent>
       <CardFooter>
+        {/* <InteractiveHoverButton className="w-full" text="Validate My Idea" /> */}
         <Button className="w-full">Validate My Idea</Button>
       </CardFooter>
     </Card>

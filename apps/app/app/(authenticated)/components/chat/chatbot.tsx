@@ -12,7 +12,8 @@ import {
 import { Input } from '@repo/design-system/components/ui/input';
 import { ScrollArea } from '@repo/design-system/components/ui/scroll-area';
 import { handleError } from '@repo/design-system/lib/utils';
-import { Bot, SendIcon } from 'lucide-react';
+import { Bot, File, SendIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
 
 export const Chatbot = () => {
@@ -62,7 +63,7 @@ export const Chatbot = () => {
             )}
           </ScrollArea>
         </CardContent>
-        <CardFooter className="border-t p-4">
+        <CardFooter className="border-t bg-secondary/50 p-4">
           <form
             onSubmit={handleSubmit}
             className="flex w-full items-center gap-2"
@@ -72,9 +73,15 @@ export const Chatbot = () => {
               placeholder="Ask a question about your idea..."
               value={input}
               onChange={handleInputChange}
-              className="flex-1"
+              className="flex-1 bg-background text-sm"
             />
-            <Button type="submit" size="icon" disabled={isLoading}>
+            <Button
+              type="submit"
+              size="icon"
+              className="rounded-md"
+              variant="outline"
+              disabled={isLoading}
+            >
               <SendIcon className="h-4 w-4" />
             </Button>
           </form>
@@ -83,19 +90,16 @@ export const Chatbot = () => {
 
       {/* Context Area - 1/3 width */}
       <Card className="col-span-12 lg:col-span-4">
-        <CardContent className="p-6">
-          <h3 className="font-semibold">Chat Context</h3>
-          <p className="mt-2 text-muted-foreground text-sm">
-            I can help you with:
-          </p>
-          <ul className="mt-4 space-y-3 text-sm">
-            <li className="flex items-center gap-2">
-              • Market analysis and trends
-            </li>
-            <li className="flex items-center gap-2">• Competitor insights</li>
-            <li className="flex items-center gap-2">• Validation strategies</li>
-            <li className="flex items-center gap-2">• Growth opportunities</li>
-          </ul>
+        <CardContent className="flex h-[600px] items-center justify-center p-6">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <File className="h-12 w-12 text-muted-foreground/60" />
+            <p className="text-muted-foreground text-sm">
+              You haven't validated any ideas yet
+            </p>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/">Validate Your First Idea</Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

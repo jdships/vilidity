@@ -29,7 +29,10 @@ export default function HistoryPage() {
     <>
       <Header pages={['My Vilidity']} page="History" />
       <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-        <PageContainer>
+        <PageContainer
+          heading="Validations"
+          description="View and manage your idea validations"
+        >
           <ChatHistory history={mockHistory} />
         </PageContainer>
       </div>

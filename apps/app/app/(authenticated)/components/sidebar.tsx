@@ -15,11 +15,11 @@ import {
 } from '@repo/design-system/components/ui/sidebar';
 import { cn } from '@repo/design-system/lib/utils';
 import {
-  Bot,
   CircleCheckBig,
   FileCheck,
   HelpCircle,
   History,
+  MessageCircleMore,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -58,7 +58,7 @@ const data: SidebarData = {
     {
       title: 'Vilidity AI',
       href: '/chat',
-      icon: Bot,
+      icon: MessageCircleMore,
     },
   ],
   myFiles: [
