@@ -64,9 +64,15 @@ function ChatHistoryTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-1">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-end">
-        <div className="w-[300px]">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex-1 space-y-1">
+          <h1 className="font-semibold text-lg tracking-tight">Chat History</h1>
+          <p className="text-muted-foreground text-sm">
+            Your previous conversations with Vilidity AI
+          </p>
+        </div>
+        <div className="w-full md:w-[300px]">
           <Input
             placeholder="Search conversations..."
             value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}

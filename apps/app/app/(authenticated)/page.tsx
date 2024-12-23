@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { AiOutput } from './components/dashboard/ai-output';
 import { ValidationForm } from './components/dashboard/validation-form';
 import { Header } from './components/header';
+import UpgradeBanner from './components/upgrade/banner';
 
 const title = 'Dashboard';
 const description = 'Your AI-powered idea validation dashboard.';
@@ -18,6 +19,7 @@ export default function DashboardPage() {
   return (
     <>
       <Header pages={['Platform']} page="Validate" />
+      <UpgradeBanner />
       <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
         <PageContainer
           heading="Validate Your Idea"

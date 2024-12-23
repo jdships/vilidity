@@ -4,6 +4,7 @@
 
 import { Button } from '@repo/design-system/components/ui/button';
 import { TicketPercent, X } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Define the sale end date - eg: new Date('2024-12-31T23:59:59');
@@ -19,7 +20,7 @@ interface TimeLeft {
   isExpired: boolean;
 }
 
-export default function BannerDemo() {
+export default function UpgradeBanner() {
   const [isVisible, setIsVisible] = useState(true);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -71,7 +72,7 @@ export default function BannerDemo() {
   if (!isVisible || timeLeft.isExpired) return null;
 
   return (
-    <div className="dark bg-muted px-4 py-3 text-foreground">
+    <div className="border-b bg-sidebar px-4 py-3 text-foreground">
       <div className="flex gap-2 md:items-center">
         <div className="flex grow gap-3 md:items-center">
           <div
@@ -82,7 +83,7 @@ export default function BannerDemo() {
           </div>
           <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
             <div className="space-y-0.5">
-              <p className="font-medium text-sm">Black Friday Sale!</p>
+              <p className="font-medium text-sm">Early Bird Sale!</p>
               <p className="text-muted-foreground text-sm">
                 It kicks off today and is available for just 24
                 hours—don&lsquo;t miss out!
@@ -109,9 +110,9 @@ export default function BannerDemo() {
                   <span className="text-muted-foreground">s</span>
                 </span>
               </div>
-              <Button size="sm" className="text-sm">
-                Buy now
-              </Button>
+              <Link href="/upgrade">
+                <Button size="sm">Upgrade Now</Button>
+              </Link>
             </div>
           </div>
         </div>

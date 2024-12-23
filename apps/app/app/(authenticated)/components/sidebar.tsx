@@ -1,6 +1,5 @@
 'use client';
-import {} from '@repo/design-system/components/ui/dropdown-menu';
-import {} from '@repo/design-system/components/ui/dropdown-menu';
+
 import {
   Sidebar,
   SidebarContent,
@@ -56,7 +55,7 @@ const data: SidebarData = {
       icon: CircleCheckBig,
     },
     {
-      title: 'Vilidity AI',
+      title: 'Chat',
       href: '/chat',
       icon: MessageCircleMore,
     },

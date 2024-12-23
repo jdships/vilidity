@@ -12,13 +12,11 @@ import {
 } from '@repo/design-system/components/ui/command';
 import { DialogTitle } from '@repo/design-system/components/ui/dialog';
 import {
-  BarChart3,
-  FolderClosed,
+  CircleCheckBig,
+  FileCheck,
   HelpCircle,
   History,
-  LayoutDashboard,
-  Lightbulb,
-  MessageSquare,
+  MessageCircleMore,
   Search,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -27,13 +25,13 @@ import { useEffect, useState } from 'react';
 
 const actions = [
   {
-    title: 'Analyze New Idea',
-    icon: Lightbulb,
-    href: '/analyze',
+    title: 'Validate',
+    icon: CircleCheckBig,
+    href: '/',
   },
   {
-    title: 'Chat with AI',
-    icon: MessageSquare,
+    title: 'Chat',
+    icon: MessageCircleMore,
     href: '/chat',
   },
 ] as const;
@@ -41,40 +39,29 @@ const actions = [
 const recentProjects = [
   {
     title: 'E-commerce Platform',
-    href: '/history/728ed52f',
+    href: '/validations/1',
   },
   {
     title: 'Mobile App Idea',
-    href: '/history/489e1d42',
+    href: '/validations/2',
   },
   {
     title: 'SaaS Product',
-    href: '/history/573a1490',
+    href: '/validations/3',
   },
 ] as const;
 
 const navigation = [
   {
-    title: 'Dashboard',
-    href: '/',
-    icon: LayoutDashboard,
-  },
-  {
     title: 'Validations',
     href: '/validations',
-    icon: FolderClosed,
+    icon: FileCheck,
   },
   {
-    title: 'History',
+    title: 'Chat History',
     href: '/history',
     icon: History,
   },
-  {
-    title: 'Analytics',
-    href: '/analytics',
-    icon: BarChart3,
-  },
-
   {
     title: 'Help & Support',
     href: '/help',
