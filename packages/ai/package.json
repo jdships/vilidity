@@ -12,7 +12,8 @@
     "ai": "^4.0.14",
     "react": "^19.0.0",
     "react-markdown": "^9.0.1",
-    "tailwind-merge": "^2.5.5"
+    "tailwind-merge": "^2.5.5",
+    "next": "^15.1.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

@@ -1,5 +1,6 @@
 'use client';
 import {} from '@repo/design-system/components/ui/dropdown-menu';
+import {} from '@repo/design-system/components/ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -28,6 +29,7 @@ import { useEffect } from 'react';
 import Logo from '../public/logo.svg';
 import { CommandMenu } from './command-menu';
 import { PlanUsage } from './plan-usage';
+import { NavValidations } from './sidebar/nav-validations';
 
 interface NavItem {
   title: string;
@@ -172,10 +174,11 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
               ))}
             </SidebarMenu>
           </SidebarGroup>
+          <NavValidations />
         </SidebarContent>
-        <SidebarFooter className="gap-0 pb-0">
-          <SidebarMenu className="gap-0 p-0">
-            <SidebarMenuItem className="gap-0 p-0">
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
               <PlanUsage />
             </SidebarMenuItem>
           </SidebarMenu>

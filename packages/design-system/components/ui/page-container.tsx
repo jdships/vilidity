@@ -8,6 +8,10 @@ interface PageContainerProps {
   className?: string;
   size?: 'sm' | 'default' | 'lg' | 'full';
   noPadding?: boolean;
+  heading?: string;
+  description?: string;
+  hideHeader?: boolean;
+  action?: ReactNode;
 }
 
 const sizeMap = {
@@ -22,6 +26,10 @@ export function PageContainer({
   className,
   size = 'default',
   noPadding = false,
+  heading,
+  description,
+  hideHeader = false,
+  action,
 }: PageContainerProps) {
   return (
     <div
@@ -32,6 +40,25 @@ export function PageContainer({
         className
       )}
     >
+      {!hideHeader && (heading || description || action) && (
+        <div className="mb-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-1">
+              {heading && (
+                <h1 className="font-semibold text-lg tracking-tight">
+                  {heading}
+                </h1>
+              )}
+              {description && (
+                <p className="text-muted-foreground text-sm">
+                  {description}
+                </p>
+              )}
+            </div>
+            {action && <div>{action}</div>}
+          </div>
+        </div>
+      )}
       {children}
     </div>
   );

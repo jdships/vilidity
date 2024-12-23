@@ -1,8 +1,14 @@
- <svg
+interface LogoProps {
+  className?: string;
+}
+
+export const Logo = ({ className }: LogoProps) => (
+  <svg
     id="Layer_2"
     viewBox="0 0 512 512"
     xmlns="http://www.w3.org/2000/svg"
     data-name="Layer 2"
+    className={className}
   >
     <title>Vilidity AI Logo</title>
     <g id="Icon">
@@ -11,3 +17,4 @@
       </g>
     </g>
   </svg>
+);

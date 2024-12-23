@@ -16,6 +16,7 @@ export const Hero = async () => {
           <div>
             <Feed queries={[blog.latestPostQuery]} draft={draft.isEnabled}>
               {/* biome-ignore lint/suspicious/useAwait: "Server Actions must be async" */}
+              {/* @ts-ignore -- Feed component types are inferred from query */}
               {async ([data]) => {
                 'use server';
 

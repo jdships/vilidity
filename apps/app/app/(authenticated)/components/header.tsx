@@ -14,15 +14,13 @@ import { Button } from '@repo/design-system/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@repo/design-system/components/ui/dropdown-menu';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { SidebarTrigger } from '@repo/design-system/components/ui/sidebar';
-import { Bell, MessageSquare, Sparkles, Zap } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
 
 type HeaderProps = {
@@ -94,48 +92,25 @@ export const Header = ({ pages, page, children }: HeaderProps) => {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative rounded-full"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Open notifications</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[320px]">
+          <DropdownMenuContent align="end" className="w-[380px]">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <div className="flex flex-col space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Analysis Complete</span>
-                  </div>
-                  <p className="text-muted-foreground text-xs">
-                    Your e-commerce platform analysis is ready to view
-                  </p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <div className="flex flex-col space-y-1">
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-primary" />
-                    <span className="font-medium">New Message</span>
-                  </div>
-                  <p className="text-muted-foreground text-xs">
-                    You have a new message in the chat
-                  </p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <div className="flex flex-col space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    <span className="font-medium">Pro Trial Available</span>
-                  </div>
-                  <p className="text-muted-foreground text-xs">
-                    Try Pro features free for 14 days
-                  </p>
-                </div>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <div className="flex min-h-[300px] flex-col items-center justify-center p-4 text-center">
+              <Bell className="mb-4 h-12 w-12 text-muted-foreground/30" />
+              <p className="mb-2 font-medium">All caught up!</p>
+              <p className="text-muted-foreground text-sm">
+                We'll notify you when there's something new.
+              </p>
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
 
