@@ -11,11 +11,11 @@ import { notFound } from 'next/navigation';
 import { Header } from '../../../components/header';
 
 interface ResultsPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ResultsPage({ params }: ResultsPageProps) {
-  const id = params?.id;
+  const { id } = await params;
   if (!id) notFound();
 
   const validation = await db.validation.findUnique({

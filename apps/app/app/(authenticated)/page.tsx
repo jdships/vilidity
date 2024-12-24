@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@repo/design-system/components/ui/card';
 import { PageContainer } from '@repo/design-system/components/ui/page-container';
+import { Separator } from '@repo/design-system/components/ui/separator';
 import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
 import { AiOutput } from './components/dashboard/ai-output';
@@ -28,16 +29,24 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4">
             <UpgradeBanner />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-              {/* ValidationForm - 1/3 width */}
-              <div className="lg:col-span-4">
-                <ValidationForm />
+            <Card>
+              <div className="grid lg:grid-cols-[1fr,auto,1fr]">
+                <div className="w-full p-6">
+                  <ValidationForm />
+                </div>
+
+                <Separator
+                  orientation="vertical"
+                  className="hidden h-full lg:block"
+                />
+                <Separator className="lg:hidden" />
+
+                <div className="w-full p-6">
+                  <AiOutput />
+                </div>
               </div>
-              {/* AiOutput - 2/3 width */}
-              <div className="lg:col-span-8">
-                <AiOutput />
-              </div>
-            </div>
+            </Card>
+
             <Card className="relative overflow-hidden">
               <CardContent className="relative p-6">
                 <div className="flex flex-col gap-6">

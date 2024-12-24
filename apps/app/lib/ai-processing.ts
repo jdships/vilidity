@@ -25,7 +25,7 @@ export async function startAIProcessing({
     // Simulate AI processing time
     await new Promise((resolve) => setTimeout(resolve, 15000));
 
-    // Update status to COMPLETED
+    // Update status to COMPLETED and create result
     await db.validation.update({
       where: { id: validationId },
       data: {
@@ -38,6 +38,15 @@ export async function startAIProcessing({
             overallScore: Math.random() * 100,
             insights: {},
             suggestions: 'Sample suggestions',
+          },
+        },
+        metrics: {
+          create: {
+            marketSize: Math.floor(Math.random() * 1000),
+            targetAudience: Math.floor(Math.random() * 100),
+            competitorCount: Math.floor(Math.random() * 50),
+            growthPotential: Math.floor(Math.random() * 100),
+            marketTrends: {},
           },
         },
       },

@@ -4,9 +4,10 @@ import { createValidation } from '@/actions/create-validation';
 import { useUploadThing } from '@/lib/uploadthing';
 import { validationFormSchema } from '@/lib/validations/validation-form';
 import type { ValidationFormInput } from '@/lib/validations/validation-form';
+import { useValidationStore } from '@/store/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Card, CardContent } from '@repo/design-system/components/ui/card';
+import {} from '@repo/design-system/components/ui/card';
 import {
   Form,
   FormControl,
@@ -26,7 +27,6 @@ import {
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { cn } from '@repo/design-system/lib/utils';
 import { FileText, Upload, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
@@ -174,8 +174,10 @@ function FileUpload({
 }
 
 export function ValidationForm() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setValidationId, setIsProcessing, isProcessing } =
+    useValidationStore();
+
   const form = useForm<ValidationFormInput>({
     resolver: zodResolver(validationFormSchema),
     defaultValues: {
@@ -193,7 +195,8 @@ export function ValidationForm() {
 
       if (result.success) {
         toast.success('Validation created successfully');
-        router.push(`/validations/${result.validationId}`);
+        setValidationId(result.validationId);
+        setIsProcessing(true);
       } else {
         toast.error(result.error || 'Something went wrong');
       }
@@ -205,92 +208,93 @@ export function ValidationForm() {
   };
 
   return (
-    <Card className="w-full">
-      <CardContent className="pt-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your idea title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your idea title" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your idea in detail"
-                      className="min-h-[120px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Describe your idea in detail"
+                  className="min-h-[120px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {CATEGORIES.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {CATEGORIES.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="files"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Upload Files (Optional)</FormLabel>
-                  <FormControl>
-                    <FileUpload onChange={field.onChange} value={field.value} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="files"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Upload Files (Optional)</FormLabel>
+              <FormControl>
+                <FileUpload onChange={field.onChange} value={field.value} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <div className="flex w-full justify-center pt-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full ">
-                {isSubmitting ? 'Creating...' : 'Create Validation'}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+        <div className="flex w-full justify-center pt-4">
+          <Button
+            type="submit"
+            disabled={isSubmitting || isProcessing}
+            className="w-full"
+          >
+            {isSubmitting
+              ? 'Creating...'
+              : isProcessing
+                ? 'Processing...'
+                : 'Create Validation'}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

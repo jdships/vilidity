@@ -3,26 +3,25 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id') || params.id;
-
-  if (!id) {
-    return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
-  }
-
   try {
+    const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const validationId = searchParams.get('id') || id;
+
+    if (!validationId) {
+      return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+    }
+
     const validation = await db.validation.findUnique({
-      where: { id },
+      where: { id: validationId },
       select: {
+        id: true,
         status: true,
         result: {
           select: {
-            viralityScore: true,
-            uniquenessScore: true,
-            problemSolvingScore: true,
-            overallScore: true,
+            id: true,
           },
         },
       },
@@ -37,8 +36,9 @@ export async function GET(
 
     return NextResponse.json({ validation });
   } catch (error) {
+    console.error('Status check error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch validation status' },
+      { error: 'Failed to check validation status' },
       { status: 500 }
     );
   }

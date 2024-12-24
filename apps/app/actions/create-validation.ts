@@ -5,7 +5,6 @@ import type { ValidationFormInput } from '@/lib/validations/validation-form';
 import { validationFormSchema } from '@/lib/validations/validation-form';
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@repo/database';
-import { revalidatePath } from 'next/cache';
 
 export async function createValidation(data: ValidationFormInput) {
   console.log('Received validation data:', data);
@@ -53,18 +52,6 @@ export async function createValidation(data: ValidationFormInput) {
       },
     });
 
-    // Then create metrics
-    await db.validationMetrics.create({
-      data: {
-        validationId: validation.id,
-        marketSize: 0,
-        targetAudience: 0,
-        competitorCount: 0,
-        growthPotential: 0,
-        marketTrends: {},
-      },
-    });
-
     // Start AI processing in the background
     startAIProcessing({
       validationId: validation.id,
@@ -76,7 +63,6 @@ export async function createValidation(data: ValidationFormInput) {
       console.error('AI Processing error:', error);
     });
 
-    revalidatePath('/validations');
     return { success: true, validationId: validation.id };
   } catch (error) {
     const errorMessage =
