@@ -1,20 +1,12 @@
 'use client';
 
 import { createValidation } from '@/actions/create-validation';
-import { useFileUpload } from '@/lib/uploadthing';
-import type { ValidationFormInput } from '@/lib/validations/validation-form';
+import { useUploadThing } from '@/lib/uploadthing';
 import { validationFormSchema } from '@/lib/validations/validation-form';
-import type { ValidationFormState } from '@/types/validation';
+import type { ValidationFormInput } from '@/lib/validations/validation-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@repo/design-system/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@repo/design-system/components/ui/card';
+import { Card, CardContent } from '@repo/design-system/components/ui/card';
 import {
   Form,
   FormControl,
@@ -33,20 +25,33 @@ import {
 } from '@repo/design-system/components/ui/select';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { cn } from '@repo/design-system/lib/utils';
-import { ArrowRight, FileText, Loader2, Trash2, Upload } from 'lucide-react';
+import { FileText, Upload, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+const CATEGORIES = [
+  'SaaS',
+  'Mobile App',
+  'E-commerce',
+  'AI/ML',
+  'Health Tech',
+  'EdTech',
+  'FinTech',
+  'Other',
+];
+
 function FileUpload({
   onChange,
+  value = [],
 }: {
   onChange: (files: ValidationFormInput['files']) => void;
+  value?: ValidationFormInput['files'];
 }) {
   const [rejectedFiles, setRejectedFiles] = useState<File[]>([]);
-  const { uploadFiles } = useFileUpload();
+  const { startUpload, isUploading } = useUploadThing('imageUploader');
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
@@ -58,14 +63,18 @@ function FileUpload({
         const toastId = toast.loading('Uploading files...');
 
         try {
-          const uploadedFiles = await uploadFiles(acceptedFiles, (progress) => {
-            toast.loading(`Uploading... ${Math.round(progress)}%`, {
-              id: toastId,
-            });
-          });
+          const uploadedFiles = await startUpload(acceptedFiles);
 
           if (uploadedFiles) {
-            onChange(uploadedFiles);
+            onChange([
+              ...value,
+              ...uploadedFiles.map((file) => ({
+                name: file.name,
+                url: file.url,
+                size: file.size,
+                mimeType: file.type,
+              })),
+            ]);
             toast.success('Files uploaded successfully', { id: toastId });
           }
         } catch (error) {
@@ -86,11 +95,15 @@ function FileUpload({
         'image/png': ['.png'],
         'image/jpeg': ['.jpg', '.jpeg'],
       },
-      maxSize: 5 * 1024 * 1024, // 5MB
+      maxSize: 4 * 1024 * 1024, // 4MB
     });
 
+  const removeFile = (fileUrl: string) => {
+    onChange(value.filter((f) => f.url !== fileUrl));
+  };
+
   return (
-    <div>
+    <div className="space-y-4">
       <div
         className={cn(
           'relative flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border border-muted-foreground/25 border-dashed px-5 py-4 text-center transition',
@@ -116,17 +129,41 @@ function FileUpload({
               : 'Drag & drop files here, or click to select'}
         </p>
         <p className="text-muted-foreground text-xs">
-          Supported file types: PDF, Word, PNG, JPG (Max 5MB)
+          Supported file types: PDF, Word, PNG, JPG (Max 4MB)
         </p>
       </div>
+
+      {value.length > 0 && (
+        <div className="space-y-2">
+          {value.map((file) => (
+            <div
+              key={file.url}
+              className="flex items-center justify-between rounded-md border px-2 py-1"
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs">{file.name}</span>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeFile(file.url)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {rejectedFiles.length > 0 && (
         <div className="mt-2 space-y-1">
           {rejectedFiles.map((file, i) => (
             <p key={i} className="text-destructive text-xs">
               {file.name} -{' '}
-              {file.size > 5 * 1024 * 1024
-                ? 'File too large (max 5MB)'
+              {file.size > 4 * 1024 * 1024
+                ? 'File too large (max 4MB)'
                 : 'Unsupported file type'}
             </p>
           ))}
@@ -138,55 +175,40 @@ function FileUpload({
 
 export function ValidationForm() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<ValidationFormInput>({
     resolver: zodResolver(validationFormSchema),
     defaultValues: {
       title: '',
-      category: undefined,
       description: '',
+      category: '',
       files: [],
     },
   });
 
-  const [formState, setFormState] = useState<ValidationFormState>({
-    status: 'idle',
-  });
-
   const onSubmit = async (data: ValidationFormInput) => {
     try {
-      setFormState({ status: 'submitting' });
-
+      setIsSubmitting(true);
       const result = await createValidation(data);
 
-      if (!result.success) {
-        throw new Error(result.error);
+      if (result.success) {
+        toast.success('Validation created successfully');
+        router.push(`/validations/${result.validationId}`);
+      } else {
+        toast.error(result.error || 'Something went wrong');
       }
-
-      router.push(`/validations/${result.validationId}`);
-      setFormState({ status: 'completed' });
-      toast.success('Validation submitted successfully');
     } catch (error) {
-      console.error('Submission error:', error);
-      setFormState({
-        status: 'error',
-        error: 'Failed to submit validation',
-      });
-      toast.error('Failed to submit validation');
+      toast.error('Failed to create validation');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} suppressHydrationWarning>
-        <Card>
-          <CardHeader>
-            <CardTitle>Validate Your Idea</CardTitle>
-            <CardDescription>
-              Enter your idea details for AI-powered validation
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
+    <Card className="w-full">
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="title"
@@ -195,6 +217,24 @@ export function ValidationForm() {
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your idea title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe your idea in detail"
+                      className="min-h-[120px]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,31 +257,13 @@ export function ValidationForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="SaaS">SaaS</SelectItem>
-                      <SelectItem value="Mobile App">Mobile App</SelectItem>
-                      <SelectItem value="E-commerce">E-commerce</SelectItem>
-                      <SelectItem value="Hardware">Hardware</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      {CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your idea in detail..."
-                      className="min-h-[150px]"
-                      {...field}
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -252,70 +274,23 @@ export function ValidationForm() {
               name="files"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Additional Documentation (Optional)</FormLabel>
+                  <FormLabel>Upload Files (Optional)</FormLabel>
                   <FormControl>
-                    <FileUpload onChange={field.onChange} />
+                    <FileUpload onChange={field.onChange} value={field.value} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {form.watch('files').length > 0 && (
-              <div className="mt-4 space-y-2">
-                {form.watch('files').map((file) => (
-                  <div
-                    key={file.url}
-                    className="flex items-center gap-2 rounded-md border border-border bg-muted/50 px-2 py-1"
-                  >
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="truncate text-xs">{file.name}</span>
-                    <span className="ml-auto text-muted-foreground text-xs">
-                      {(file.size / 1024 / 1024).toFixed(2)}MB
-                    </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="ml-2 h-8 w-8 shrink-0 text-muted-foreground/50 hover:text-destructive"
-                      onClick={() => {
-                        const currentFiles = form.getValues('files');
-                        form.setValue(
-                          'files',
-                          currentFiles.filter((f) => f.url !== file.url)
-                        );
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Remove file</span>
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-
-          <CardFooter>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={formState.status === 'submitting'}
-            >
-              {formState.status === 'submitting' ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:animate-none" />
-                  <span>Submitting...</span>
-                </>
-              ) : (
-                <>
-                  <span>Validate My Idea</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
-      </form>
-    </Form>
+            <div className="flex w-full justify-center pt-4">
+              <Button type="submit" disabled={isSubmitting} className="w-full ">
+                {isSubmitting ? 'Creating...' : 'Create Validation'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
