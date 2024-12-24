@@ -1,20 +1,32 @@
-import { PageContainer } from '@repo/design-system/components/ui/page-container';
-import type { Metadata } from 'next';
+import { db } from '@repo/database';
+import { notFound } from 'next/navigation';
 import { Header } from '../../components/header';
+import { ValidationResults } from '../components/validation-results';
 
-export const metadata: Metadata = {
-  title: 'Validations',
-  description: 'Chat with our AI assistant about your idea validation.',
-};
+interface ValidationPageProps {
+  params: {
+    id: string;
+  };
+}
 
-export default function ValidationsPage() {
+export default async function ValidationPage({ params }: ValidationPageProps) {
+  const validation = await db.validation.findUnique({
+    where: { id: params.id },
+    include: {
+      result: true,
+      metrics: true,
+    },
+  });
+
+  if (!validation) {
+    notFound();
+  }
+
   return (
     <>
-      <Header pages={['My Vilidity']} page="Validations" />
+      <Header pages={['Validations']} page={validation.title} />
       <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-        <PageContainer>
-          <div>Page</div>
-        </PageContainer>
+        <ValidationResults validation={validation} />
       </div>
     </>
   );

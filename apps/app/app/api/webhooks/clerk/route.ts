@@ -1,5 +1,5 @@
 import type { WebhookEvent } from '@clerk/nextjs/server';
-import { database } from '@repo/database';
+import { db } from '@repo/database';
 import { headers } from 'next/headers';
 import { Webhook } from 'svix';
 
@@ -29,7 +29,7 @@ async function handleUserEvent(data: ClerkUserData) {
     return new Response('No email address found', { status: 400 });
   }
 
-  await database.user.upsert({
+  await db.user.upsert({
     where: { id },
     create: {
       id,

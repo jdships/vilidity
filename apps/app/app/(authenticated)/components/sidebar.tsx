@@ -106,7 +106,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                     alt="Logo"
                     className="mr-[0.2rem] h-6 w-6 dark:invert"
                   />
-                  <p className="whitespace-nowrap font-bold text-sm uppercase tracking-wide">
+                  <p className="whitespace-nowrap font-bold text-sm tracking-wide">
                     Vilidity
                   </p>
                 </Link>

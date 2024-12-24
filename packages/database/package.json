@@ -7,7 +7,10 @@
     "analyze": "prisma generate --no-hints",
     "build": "prisma generate --no-hints",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:reset": "prisma db push --force-reset && prisma generate"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
