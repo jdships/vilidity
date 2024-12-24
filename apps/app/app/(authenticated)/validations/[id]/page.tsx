@@ -1,7 +1,7 @@
 import { db } from '@repo/database';
 import { notFound } from 'next/navigation';
 import { Header } from '../../components/header';
-import { ValidationResults } from '../components/validation-results';
+import { ValidationProgress } from '../components/validation-results';
 
 interface ValidationPageProps {
   params: {
@@ -26,7 +26,7 @@ export default async function ValidationPage({ params }: ValidationPageProps) {
     <>
       <Header pages={['Validations']} page={validation.title} />
       <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-        <ValidationResults validation={validation} />
+        <ValidationProgress validationId={validation.id} />
       </div>
     </>
   );

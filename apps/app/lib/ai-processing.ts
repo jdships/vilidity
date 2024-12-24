@@ -1,6 +1,4 @@
 import { db } from '@repo/database';
-import { analyzeIdea } from './ai-analysis';
-import { extractFileContent } from './file-processing';
 
 interface ProcessingInput {
   validationId: string;
@@ -10,69 +8,51 @@ interface ProcessingInput {
   files: string[];
 }
 
-export async function startAIProcessing(input: ProcessingInput) {
+export async function startAIProcessing({
+  validationId,
+  title,
+  description,
+  category,
+  files,
+}: {
+  validationId: string;
+  title: string;
+  description: string;
+  category: string;
+  files: string[];
+}) {
   try {
-    // 1. Update status to processing
+    // Simulate AI processing time
+    await new Promise((resolve) => setTimeout(resolve, 15000));
+
+    // Update status to COMPLETED
     await db.validation.update({
-      where: { id: input.validationId },
-      data: { status: 'IN_PROGRESS' },
-    });
-
-    // 2. Process files and extract text content
-    const fileContents = await Promise.all(
-      input.files.map(async (fileUrl) => {
-        const file = {
-          url: fileUrl,
-          mimeType: getMimeType(fileUrl), // We need to implement this helper
-          name: fileUrl.split('/').pop() || '',
-        };
-        return extractFileContent(file);
-      })
-    );
-
-    // Log for debugging
-    console.log('Extracted file contents:', fileContents);
-
-    // 3. Combine all input for AI analysis
-    const analysisInput = {
-      title: input.title,
-      description: input.description,
-      category: input.category,
-      fileContents,
-    };
-
-    // 4. Call AI APIs for analysis
-    const analysis = await analyzeIdea({
-      title: input.title,
-      description: input.description,
-      category: input.category,
-      fileContents,
-    });
-
-    // 5. Store results
-    await db.validationResult.create({
+      where: { id: validationId },
       data: {
-        validationId: input.validationId,
-        viralityScore: analysis.viralityScore,
-        uniquenessScore: analysis.uniquenessScore,
-        problemSolvingScore: analysis.problemSolvingScore,
-        overallScore: analysis.overallScore,
-        insights: analysis.insights,
-        suggestions: analysis.suggestions,
+        status: 'COMPLETED',
+        result: {
+          create: {
+            viralityScore: Math.random() * 100,
+            uniquenessScore: Math.random() * 100,
+            problemSolvingScore: Math.random() * 100,
+            overallScore: Math.random() * 100,
+            insights: {},
+            suggestions: 'Sample suggestions',
+          },
+        },
       },
     });
 
-    // 6. Update status to completed
-    await db.validation.update({
-      where: { id: input.validationId },
-      data: { status: 'COMPLETED' },
-    });
+    return true;
   } catch (error) {
     console.error('AI Processing error:', error);
+
+    // Update status to FAILED
     await db.validation.update({
-      where: { id: input.validationId },
+      where: { id: validationId },
       data: { status: 'FAILED' },
     });
+
     throw error;
   }
 }

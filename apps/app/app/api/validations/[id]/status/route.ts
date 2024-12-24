@@ -1,61 +1,45 @@
 import { db } from '@repo/database';
-import { headers } from 'next/headers';
-
-export const runtime = 'edge';
+import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const headersList = headers();
-  const abortController = new AbortController();
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id') || params.id;
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+  }
 
   try {
-    const stream = new ReadableStream({
-      async start(controller) {
-        while (true) {
-          const validation = await db.validation.findUnique({
-            where: { id: params.id },
-            include: { result: true },
-          });
-
-          if (!validation) {
-            controller.close();
-            break;
-          }
-
-          controller.enqueue(
-            `data: ${JSON.stringify({
-              status: validation.status,
-              result: validation.result,
-            })}\n\n`
-          );
-
-          if (
-            validation.status === 'COMPLETED' ||
-            validation.status === 'FAILED'
-          ) {
-            controller.close();
-            break;
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-        }
-      },
-      cancel() {
-        abortController.abort();
+    const validation = await db.validation.findUnique({
+      where: { id },
+      select: {
+        status: true,
+        result: {
+          select: {
+            viralityScore: true,
+            uniquenessScore: true,
+            problemSolvingScore: true,
+            overallScore: true,
+          },
+        },
       },
     });
 
-    return new Response(stream, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
-      },
-    });
+    if (!validation) {
+      return NextResponse.json(
+        { error: 'Validation not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ validation });
   } catch (error) {
-    console.error('Status stream error:', error);
-    return new Response('Error', { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch validation status' },
+      { status: 500 }
+    );
   }
 }
