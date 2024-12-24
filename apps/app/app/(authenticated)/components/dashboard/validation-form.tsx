@@ -72,7 +72,9 @@ export function ValidationForm() {
       </CardContent>
       <CardFooter>
         {/* <InteractiveHoverButton className="w-full" text="Validate My Idea" /> */}
-        <Button className="w-full">Validate My Idea</Button>
+        <Button className="w-full" size="sm" variant="default">
+          Validate My Idea
+        </Button>
       </CardFooter>
     </Card>
   );

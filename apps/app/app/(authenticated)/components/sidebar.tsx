@@ -1,5 +1,6 @@
 'use client';
 
+import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -96,20 +97,21 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
           <SidebarMenu>
             <SidebarMenuItem>
               <div className="mb-2 flex h-11 items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-1 transition-opacity duration-200 hover:opacity-80"
-                  >
-                    <Image
-                      src={Logo}
-                      alt="Logo"
-                      className="mr-[0.2rem] h-6 w-6 dark:invert"
-                    />
-                    <p className=" whitespace-nowrap font-bold text-sm uppercase tracking-wide">
-                      Vilidity
-                    </p>
-                  </Link>
+                <Link
+                  href="/"
+                  className="flex items-center gap-1 transition-opacity duration-200 hover:opacity-80"
+                >
+                  <Image
+                    src={Logo}
+                    alt="Logo"
+                    className="mr-[0.2rem] h-6 w-6 dark:invert"
+                  />
+                  <p className="whitespace-nowrap font-bold text-sm uppercase tracking-wide">
+                    Vilidity
+                  </p>
+                </Link>
+                <div className="ml-auto">
+                  <ModeToggle />
                 </div>
               </div>
             </SidebarMenuItem>

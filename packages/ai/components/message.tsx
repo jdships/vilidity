@@ -22,7 +22,7 @@ export const Message = ({ data, markdown, className }: MessageProps) => {
         data.role === 'user' ? 'flex-row-reverse justify-end' : 'flex-row'
       )}
     >
-      {/* Avatar - Now positioned at the top */}
+      {/* Avatar */}
       {data.role === 'user' ? (
         <div className="relative h-8 w-8 shrink-0 self-start overflow-hidden rounded-full">
           <Image
@@ -41,12 +41,42 @@ export const Message = ({ data, markdown, className }: MessageProps) => {
       {/* Message */}
       <div
         className={twMerge(
-          'max-w-[80%] rounded-md px-4 py-1',
+          'max-w-[80%] rounded-md px-8 py-6',
           data.role === 'user' ? 'bg-sidebar' : 'bg-muted',
           className
         )}
       >
-        <Markdown className="prose-sm [&>p]:mb-0 [&>p]:leading-relaxed">
+        <Markdown
+          className="prose prose-neutral dark:prose-invert prose-li:my-1 prose-ol:my-4 prose-p:my-4 prose-ul:my-4 prose-headings:mt-8 prose-headings:mb-4 max-w-none prose-ol:list-decimal prose-ul:list-disc whitespace-pre-wrap break-words prose-li:pl-2 prose-ol:pl-6 prose-ul:pl-6 prose-headings:font-semibold prose-headings:text-lg prose-strong:text-foreground prose-p:leading-7 first:prose-headings:mt-0 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+          components={{
+            h2: ({ children }) => (
+              <h2 className="flex items-center gap-2 border-b pb-2">
+                {children}
+              </h2>
+            ),
+            ul: ({ children }) => (
+              <ul className="not-prose space-y-2">{children}</ul>
+            ),
+            ol: ({ children }) => (
+              <ol className="not-prose space-y-2">{children}</ol>
+            ),
+            p: ({ children }) => (
+              <p className="not-prose whitespace-pre-wrap text-base">
+                {children}
+              </p>
+            ),
+            li: ({ children }) => (
+              <li className="not-prose text-base leading-relaxed">
+                {children}
+              </li>
+            ),
+            strong: ({ children }) => (
+              <strong className="font-semibold text-foreground">
+                {children}
+              </strong>
+            ),
+          }}
+        >
           {data.content}
         </Markdown>
       </div>

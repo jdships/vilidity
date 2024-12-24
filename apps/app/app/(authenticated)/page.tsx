@@ -16,16 +16,24 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
+  // TODO: Get actual usage from API
+  const validationProgress = {
+    used: 0,
+    total: 1,
+  };
+
   return (
     <>
       <Header pages={['Platform']} page="Validate" />
-      <UpgradeBanner />
+
       <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
         <PageContainer
           heading="Validate Your Idea"
           description="Use AI-powered analysis to validate and refine your business idea."
         >
           <div className="flex flex-col gap-4">
+            <UpgradeBanner />
+
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
               {/* ValidationForm - 1/3 width */}
               <div className="lg:col-span-4">
@@ -36,8 +44,6 @@ export default function DashboardPage() {
                 <AiOutput />
               </div>
             </div>
-
-            {/* Explanation Card */}
             <Card className="relative overflow-hidden">
               <CardContent className="relative p-6">
                 <div className="flex flex-col gap-6">
@@ -59,7 +65,7 @@ export default function DashboardPage() {
 
                     {/* Arrow 1 */}
                     <div className="hidden items-center md:flex">
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-5 w-5" />
                     </div>
 
                     {/* Step 2 */}
@@ -79,7 +85,7 @@ export default function DashboardPage() {
 
                     {/* Arrow 2 */}
                     <div className="hidden items-center md:flex">
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-5 w-5" />
                     </div>
 
                     {/* Step 3 */}

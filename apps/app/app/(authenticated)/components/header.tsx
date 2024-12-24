@@ -1,7 +1,6 @@
 'use client';
 
 import { UserButton, useAuth } from '@repo/auth/client';
-import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -80,20 +79,18 @@ export const Header = ({ pages, page, children }: HeaderProps) => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-1 px-4">
+      <div className="flex items-center gap-2 px-4">
         {/* <Link href="/upgrade">
           <Button variant="default" size="sm" className="gap-2">
             <SparklesIcon className="h-4 w-4" />
             <span>Upgrade</span>
           </Button>
         </Link> */}
-        <div className="flex items-center">
-          <ModeToggle />
-        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
+              variant="secondary"
               size="icon"
               className="relative rounded-full"
             >

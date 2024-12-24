@@ -72,7 +72,7 @@ export default function UpgradeBanner() {
   if (!isVisible || timeLeft.isExpired) return null;
 
   return (
-    <div className="border-b bg-sidebar px-4 py-3 text-foreground">
+    <div className="rounded-md border bg-sidebar px-4 py-3 text-foreground">
       <div className="flex gap-2 md:items-center">
         <div className="flex grow gap-3 md:items-center">
           <div

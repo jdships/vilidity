@@ -1,6 +1,9 @@
 'use client';
 
 import { cn } from '@repo/design-system/lib/utils';
+import { Progress } from '@repo/design-system/components/ui/progress';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/design-system/components/ui/tooltip';
+import { Info } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface PageContainerProps {
@@ -12,6 +15,10 @@ interface PageContainerProps {
   description?: string;
   hideHeader?: boolean;
   action?: ReactNode;
+  progress?: {
+    used: number;
+    total: number;
+  };
 }
 
 const sizeMap = {
@@ -30,6 +37,7 @@ export function PageContainer({
   description,
   hideHeader = false,
   action,
+  progress,
 }: PageContainerProps) {
   return (
     <div
@@ -55,7 +63,35 @@ export function PageContainer({
                 </p>
               )}
             </div>
-            {action && <div>{action}</div>}
+            <div className="flex items-center gap-4">
+              {progress && (
+                <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1">
+                      <span className="text-muted-foreground text-sm">Validations</span>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger>
+                          <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <p className="text-xs">Remaining validations this month</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Progress 
+                        value={(progress.used / progress.total) * 100} 
+                        className="h-1.5 w-24"
+                      />
+                      <span className="text-muted-foreground text-xs">
+                        {progress.used}/{progress.total}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {action}
+            </div>
           </div>
         </div>
       )}
