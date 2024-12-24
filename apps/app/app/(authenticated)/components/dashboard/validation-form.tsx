@@ -1,4 +1,11 @@
 'use client';
+
+import { createValidation } from '@/actions/create-validation';
+import { useUploadThing } from '@/lib/uploadthing';
+import type {
+  ValidationFormData,
+  ValidationFormState,
+} from '@/types/validation';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Card,
@@ -15,9 +22,65 @@ import {
   SelectValue,
 } from '@repo/design-system/components/ui/select';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
-import { Upload } from 'lucide-react';
+import { useToast } from '@repo/design-system/components/ui/use-toast';
+import { ArrowRight, Upload } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export function ValidationForm() {
+  const [formState, setFormState] = useState<ValidationFormState>({
+    status: 'idle',
+  });
+  const [files, setFiles] = useState<File[]>([]);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const { startUpload } = useUploadThing('validationFiles');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormState({ status: 'submitting' });
+
+    try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      // Upload files first
+      let uploadedFiles = [];
+      if (files.length > 0) {
+        const uploadResponse = await startUpload(files);
+        if (!uploadResponse) throw new Error('File upload failed');
+        uploadedFiles = uploadResponse;
+      }
+
+      // Create validation data
+      const validationData: ValidationFormData = {
+        title: formData.get('title') as string,
+        category: formData.get('category') as string,
+        description: formData.get('description') as string,
+        files: uploadedFiles,
+      };
+
+      const result = await createValidation(validationData);
+
+      if (!result.success) throw new Error(result.error);
+
+      // Redirect to validation page
+      router.push(`/validations/${result.validationId}`);
+    } catch (error) {
+      console.error('Submission error:', error);
+      setFormState({
+        status: 'error',
+        error: 'Failed to submit validation',
+      });
+      toast({
+        title: 'Error',
+        description: 'Failed to submit validation. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <Card>
       <CardContent className="space-y-6 pt-4">
@@ -27,6 +90,9 @@ export function ValidationForm() {
             id="title"
             placeholder="Enter a clear title for your idea"
             className="text-sm"
+            autoComplete="off"
+            data-1p-ignore
+            data-form-type="other"
           />
         </div>
         <div className="space-y-2">
@@ -53,6 +119,8 @@ export function ValidationForm() {
             id="description"
             placeholder="Describe your idea in detail..."
             className="min-h-[150px] text-sm"
+            autoComplete="off"
+            data-1p-ignore
           />
         </div>
         <div className="space-y-2">
@@ -74,6 +142,7 @@ export function ValidationForm() {
         {/* <InteractiveHoverButton className="w-full" text="Validate My Idea" /> */}
         <Button className="w-full" size="sm" variant="default">
           Validate My Idea
+          <ArrowRight className="h-4 w-4" />
         </Button>
       </CardFooter>
     </Card>

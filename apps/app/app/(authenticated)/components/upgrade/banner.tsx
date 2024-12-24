@@ -3,7 +3,7 @@
 'use client';
 
 import { Button } from '@repo/design-system/components/ui/button';
-import { TicketPercent, X } from 'lucide-react';
+import { TicketPercent } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -111,24 +111,11 @@ export default function UpgradeBanner() {
                 </span>
               </div>
               <Link href="/upgrade">
-                <Button size="sm">Upgrade Now</Button>
+                <Button size="sm">Claim Your Discount</Button>
               </Link>
             </div>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          className="group -my-1.5 -me-2 size-8 shrink-0 p-0 hover:bg-transparent"
-          onClick={() => setIsVisible(false)}
-          aria-label="Close banner"
-        >
-          <X
-            size={16}
-            strokeWidth={2}
-            className="opacity-60 transition-opacity group-hover:opacity-100"
-            aria-hidden="true"
-          />
-        </Button>
       </div>
     </div>
   );

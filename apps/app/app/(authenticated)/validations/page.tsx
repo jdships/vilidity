@@ -4,7 +4,7 @@ import { PlusCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '../components/header';
-import { ValidationCard } from '../components/validation-card';
+import ValidationCards from '../components/validations/validation-cards';
 
 export const metadata: Metadata = {
   title: 'Validations',
@@ -53,7 +53,9 @@ export default function ValidationsPage() {
             </Button>
           }
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* <EmptyState /> */}
+          <ValidationCards />
+          {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {mockValidations.map((validation) => (
               <div className="aspect-square" key={validation.id}>
                 <ValidationCard
@@ -64,7 +66,7 @@ export default function ValidationsPage() {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
         </PageContainer>
       </div>
     </>

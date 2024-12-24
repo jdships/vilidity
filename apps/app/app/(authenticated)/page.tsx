@@ -16,12 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  // TODO: Get actual usage from API
-  const validationProgress = {
-    used: 0,
-    total: 1,
-  };
-
   return (
     <>
       <Header pages={['Platform']} page="Validate" />

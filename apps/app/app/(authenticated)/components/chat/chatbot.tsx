@@ -90,12 +90,14 @@ export const Chatbot = () => {
             onSubmit={handleSubmit}
             className="flex w-full items-center gap-2"
             aria-disabled={isLoading}
+            suppressHydrationWarning
           >
             <Input
               placeholder="Ask a question about your idea..."
               value={input}
               onChange={handleInputChange}
               className="flex-1 bg-background text-sm"
+              suppressHydrationWarning
             />
             <Button
               type="submit"
@@ -103,6 +105,7 @@ export const Chatbot = () => {
               className="rounded-md"
               variant="outline"
               disabled={isLoading}
+              suppressHydrationWarning
             >
               <SendIcon className="h-4 w-4" />
             </Button>
